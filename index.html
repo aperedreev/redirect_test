@@ -1,1 +1,340 @@
+<!DOCTYPE html>
+<html lang="ru">
 
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Redirect Test</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .link-info {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-left: 4px solid #667eea;
+        }
+
+        .link-text {
+            color: #555;
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            word-break: break-all;
+        }
+
+        .link-text:last-child {
+            margin-bottom: 0;
+        }
+
+        .input-group {
+            margin-bottom: 30px;
+        }
+
+        label {
+            display: block;
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 10px;
+            text-align: left;
+        }
+
+        input[type="url"] {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e1e5e9;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: #fff;
+        }
+
+        input[type="url"]:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            min-width: 120px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #e1e5e9;
+        }
+
+        .author-info {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .github-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: #333;
+            color: white;
+            border-radius: 50%;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .github-btn:hover {
+            background: #000;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 30px 20px;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Redirect Test</h1>
+
+        <div class="link-info" id="linkInfo">
+            <div class="link-text" id="defaultLink">Default link: https://www.google.com</div>
+            <div class="link-text" id="customLink" style="display: none;"></div>
+        </div>
+
+        <div class="input-group">
+            <label for="customUrl">Custom Link:</label>
+            <input type="url" id="customUrl" placeholder="https://example.com" />
+        </div>
+
+        <div class="button-group">
+            <button class="btn btn-primary" id="redirectBtn" onclick="redirect()">Redirect</button>
+            <button class="btn btn-secondary" id="saveBtn" onclick="saveCustomLink()">Save Link</button>
+            <button class="btn btn-secondary" id="clearBtn" onclick="clearCustomLink()">Clear</button>
+        </div>
+
+        <div class="footer">
+            <div class="author-info">
+                <span>by Alex Peredreev</span>
+                <a href="https://github.com/aperedreev" target="_blank" class="github-btn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Default link constant
+        const DEFAULT_LINK = 'https://www.google.com';
+
+        // DOM elements
+        const customUrlInput = document.getElementById('customUrl');
+        const customLinkDiv = document.getElementById('customLink');
+        const redirectBtn = document.getElementById('redirectBtn');
+        const saveBtn = document.getElementById('saveBtn');
+        const clearBtn = document.getElementById('clearBtn');
+
+        // Load custom link from localStorage on page load
+        window.addEventListener('load', function () {
+            // Update default link display from constant
+            document.getElementById('defaultLink').textContent = `Default link: ${DEFAULT_LINK}`;
+
+            const savedCustomLink = localStorage.getItem('customRedirectLink');
+            if (savedCustomLink) {
+                customUrlInput.value = savedCustomLink;
+                updateCustomLinkDisplay(savedCustomLink);
+            }
+        });
+
+        // Save custom link to localStorage
+        function saveCustomLink() {
+            const customUrl = customUrlInput.value.trim();
+            if (customUrl) {
+                localStorage.setItem('customRedirectLink', customUrl);
+                updateCustomLinkDisplay(customUrl);
+                showNotification('Custom link saved successfully!');
+            } else {
+                showNotification('Please enter a valid URL', 'error');
+            }
+        }
+
+        // Clear custom link
+        function clearCustomLink() {
+            localStorage.removeItem('customRedirectLink');
+            customUrlInput.value = '';
+            customLinkDiv.style.display = 'none';
+            showNotification('Custom link cleared!');
+        }
+
+        // Update custom link display
+        function updateCustomLinkDisplay(customUrl) {
+            if (customUrl) {
+                customLinkDiv.textContent = `Custom link: ${customUrl}`;
+                customLinkDiv.style.display = 'block';
+            } else {
+                customLinkDiv.style.display = 'none';
+            }
+        }
+
+        // Redirect function
+        function redirect() {
+            const customUrl = localStorage.getItem('customRedirectLink');
+            const urlToRedirect = customUrl || DEFAULT_LINK;
+
+            // Validate URL
+            try {
+                new URL(urlToRedirect);
+                window.open(urlToRedirect, '_blank');
+            } catch (e) {
+                showNotification('Invalid URL format', 'error');
+            }
+        }
+
+        // Simple notification function
+        function showNotification(message, type = 'success') {
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.textContent = message;
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                padding: 15px 20px;
+                border-radius: 8px;
+                color: white;
+                font-weight: 600;
+                z-index: 1000;
+                animation: slideIn 0.3s ease;
+                background: ${type === 'error' ? '#dc3545' : '#28a745'};
+            `;
+
+            // Add animation styles
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes slideIn {
+                    from { transform: translateX(100%); opacity: 0; }
+                    to { transform: translateX(0); opacity: 1; }
+                }
+            `;
+            document.head.appendChild(style);
+
+            document.body.appendChild(notification);
+
+            // Remove notification after 3 seconds
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+
+        // Enable/disable save button based on input
+        customUrlInput.addEventListener('input', function () {
+            saveBtn.disabled = !this.value.trim();
+        });
+
+        // Initial button state
+        saveBtn.disabled = true;
+    </script>
+</body>
+
+</html>
